@@ -15,15 +15,15 @@ public class PowerpointLoader : MonoBehaviour
     {
         if(Input.GetKeyDown(KeyCode.P))
         {
-            ChoosePPT("220106_È¸ÀÇ");
+            ChoosePPT("TEST");
         }
 
-        else if(Input.GetKeyDown(KeyCode.RightArrow))
+        else if(Input.GetKeyDown(KeyCode.X))
         {
             MoveNext();
         }
 
-        else if(Input.GetKeyDown(KeyCode.LeftArrow))
+        else if(Input.GetKeyDown(KeyCode.Z))
         {
             MovePrevious();
         }
