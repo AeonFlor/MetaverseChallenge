@@ -1,24 +1,27 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using System.IO;
 
 public class PowerpointLoader : MonoBehaviour
 {
     public MeshRenderer Screen;
 
-    string FolderPath = "C:/Users/AeonFlor/Desktop/project/metaverse_challenge/metaverse_challenge/Assets/PPT/";
+    public Button LoadPPT;
+
+    string FolderPath = "Assets/PPT/";
     string CurrentPPT;
+
+    List<string> ListOfPPT = new List<string>();
+
     int page = 1;
 
     void Update()
     {
-        if(Input.GetKeyDown(KeyCode.P))
-        {
-            ChoosePPT("TEST");
-        }
+        //LoadPPT.onClick.AddListener(delegate { PPTLoader("Test"); });
 
-        else if(Input.GetKeyDown(KeyCode.X))
+        if(Input.GetKeyDown(KeyCode.X))
         {
             MoveNext();
         }
@@ -42,12 +45,14 @@ public class PowerpointLoader : MonoBehaviour
 
         return tex;
     }
-    void ChoosePPT(string PPTname)
+
+    void PPTLoader(string PPTname)
     {
         CurrentPPT = FolderPath + PPTname + "/슬라이드";
         Screen.material.SetTexture("_MainTex", LoadPNG(CurrentPPT + page.ToString() + ".PNG"));
         Debug.Log(CurrentPPT + page.ToString() + ".PNG");
     }
+
     void MoveNext()
     {
         if(File.Exists(CurrentPPT + (page+1).ToString() + ".PNG"))
@@ -71,6 +76,17 @@ public class PowerpointLoader : MonoBehaviour
         else
         {
             //첫 페이지라는 안내 문구
+        }
+    }
+
+    void ShowList()
+    {
+        DirectoryInfo list = new DirectoryInfo(FolderPath);
+
+        foreach(var ppt in list.GetDirectories())
+        {
+            if (!ListOfPPT.Contains(ppt.Name))
+                ListOfPPT.Add(ppt.Name);
         }
     }
 }

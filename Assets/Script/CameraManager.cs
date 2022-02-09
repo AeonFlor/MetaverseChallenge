@@ -4,15 +4,23 @@ using UnityEngine;
 
 public class CameraManager : MonoBehaviour
 {
-    public Rigidbody Player;
+    private Rigidbody Player;
     public float Sensitivity = 1500f;
     float rotateX = 0f;
     float rotateY = 0f;
 
+    void Start()
+    {
+        Player = GameObject.FindWithTag("Player").GetComponent<Rigidbody>();
+    }
+
     void Update()
     {
-        TracePlayer();
-        CameraControl();
+        if (Player != null)
+        {
+            TracePlayer();
+            CameraControl();
+        }
     }
 
     void TracePlayer()
@@ -28,8 +36,8 @@ public class CameraManager : MonoBehaviour
         rotateX += Sensitivity * mouseX * Time.deltaTime;
         rotateY += Sensitivity * mouseY * Time.deltaTime;
 
-        rotateX = Mathf.Clamp(rotateX, -80, 80);
-        rotateY = Mathf.Clamp(rotateY, -5, 30);
+        rotateX = Mathf.Clamp(rotateX, -120, 120);
+        rotateY = Mathf.Clamp(rotateY, -30, 30);
 
         // X, Y 는 회전축을 나타내기에 위치가 바뀌었다.
         transform.eulerAngles = new Vector3(-rotateY, rotateX, 0f);

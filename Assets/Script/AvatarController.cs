@@ -5,6 +5,7 @@ using UnityEngine;
 public class AvatarController : MonoBehaviour
 {
     public Rigidbody avatarRigidbody;
+    private GameObject mouseTarget;
 
     public float speed = 10f;
     public float jumpPower = 5f;
@@ -20,6 +21,16 @@ public class AvatarController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (Input.GetMouseButtonDown(0))
+        {
+            mouseTarget = GetClickedObject();
+
+            if(mouseTarget != null && mouseTarget.tag == "ProfessorDesk")
+            {
+                Debug.Log("Connect to Desk");
+            }
+        }
+
         MouseTrace();
         Move();
         Jump();
@@ -57,4 +68,20 @@ public class AvatarController : MonoBehaviour
             isJump = false;
         }
     }
+
+    private GameObject GetClickedObject()
+    {
+        RaycastHit hit;
+        GameObject mouseTarget = null;
+
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+
+        if(Physics.Raycast(ray.origin, ray.direction * 10, out hit) ==  true)
+        {
+            mouseTarget = hit.collider.gameObject;
+        }
+
+        return mouseTarget;
+    }
+
 }
