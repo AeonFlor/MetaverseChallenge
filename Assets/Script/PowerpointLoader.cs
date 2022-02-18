@@ -3,12 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using System.IO;
+using TMPro;
 
 public class PowerpointLoader : MonoBehaviour
 {
-    public MeshRenderer Screen;
+    public GameObject LoadPPT;
 
-    public Button LoadPPT;
+    public GameObject screen;
+    MeshRenderer ScreenMesh;
 
     string FolderPath = "Assets/PPT/";
     string CurrentPPT;
@@ -17,20 +19,12 @@ public class PowerpointLoader : MonoBehaviour
 
     int page = 1;
 
-    void Update()
+    void Start()
     {
-        //LoadPPT.onClick.AddListener(delegate { PPTLoader("Test"); });
-
-        if(Input.GetKeyDown(KeyCode.X))
-        {
-            MoveNext();
-        }
-
-        else if(Input.GetKeyDown(KeyCode.Z))
-        {
-            MovePrevious();
-        }
+        screen = GameObject.Find("Screen");
+        ScreenMesh = screen.GetComponent<MeshRenderer>();
     }
+
     Texture2D LoadPNG(string Path)
     {
         Texture2D tex = null;
@@ -46,40 +40,40 @@ public class PowerpointLoader : MonoBehaviour
         return tex;
     }
 
-    void PPTLoader(string PPTname)
+    public void PPTLoader(string PPTname)
     {
         CurrentPPT = FolderPath + PPTname + "/슬라이드";
-        Screen.material.SetTexture("_MainTex", LoadPNG(CurrentPPT + page.ToString() + ".PNG"));
+        ScreenMesh.material.SetTexture("_MainTex", LoadPNG(CurrentPPT + page.ToString() + ".PNG"));
         Debug.Log(CurrentPPT + page.ToString() + ".PNG");
     }
 
-    void MoveNext()
+    public void MoveNext()
     {
         if(File.Exists(CurrentPPT + (page+1).ToString() + ".PNG"))
         {
-            Screen.material.SetTexture("_MainTex", LoadPNG(CurrentPPT + (++page).ToString() + ".PNG"));
+            ScreenMesh.material.SetTexture("_MainTex", LoadPNG(CurrentPPT + (++page).ToString() + ".PNG"));
         }
 
         else
         {
-            //마지막 페이지라는 안내 문구
+            Debug.Log("마지막 페이지입니다.");
         }
     }
 
-    void MovePrevious()
+    public void MovePrevious()
     {
         if (page != 1)
         {
-            Screen.material.SetTexture("_MainTex", LoadPNG(CurrentPPT + (--page).ToString() + ".PNG"));
+            ScreenMesh.material.SetTexture("_MainTex", LoadPNG(CurrentPPT + (--page).ToString() + ".PNG"));
         }
 
         else
         {
-            //첫 페이지라는 안내 문구
+            Debug.Log("첫번째 페이지입니다.");
         }
     }
 
-    void ShowList()
+    public void ShowList()
     {
         DirectoryInfo list = new DirectoryInfo(FolderPath);
 
@@ -87,6 +81,16 @@ public class PowerpointLoader : MonoBehaviour
         {
             if (!ListOfPPT.Contains(ppt.Name))
                 ListOfPPT.Add(ppt.Name);
+        }
+
+        int yValue = 0;
+
+        foreach (string ppt in ListOfPPT)
+        {
+            GameObject index = Instantiate(LoadPPT, GameObject.Find("Content").transform);
+            index.transform.position = index.transform.position + new Vector3(0, yValue, 0);
+            index.GetComponentInChildren<TMP_Text>().text = ppt;
+            yValue -= 200;
         }
     }
 }

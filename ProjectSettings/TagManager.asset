@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Ground
   - ProfessorDesk
+  - PPT_Button
   layers:
   - Default
   - TransparentFX

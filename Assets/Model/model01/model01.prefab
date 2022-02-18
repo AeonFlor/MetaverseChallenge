@@ -110,9 +110,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f473f226fdd6cb74792be79bdfb4aa41, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  UI: {fileID: 0}
   avatarRigidbody: {fileID: 4663136541917655580}
   speed: 10
   jumpPower: 3
+  PowerpointLoader: {fileID: 0}
 --- !u!54 &4663136541917655580
 Rigidbody:
   m_ObjectHideFlags: 0

@@ -41,9 +41,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f473f226fdd6cb74792be79bdfb4aa41, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  UI: {fileID: 0}
   avatarRigidbody: {fileID: 1419743535}
+  nickname: 
   speed: 10
   jumpPower: 3
+  PowerpointLoader: {fileID: 0}
 --- !u!1001 &4136131929292902760
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -111,7 +114,8 @@ PrefabInstance:
       propertyPath: m_Enabled
       value: 1
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5866666021909216657, guid: 76506b0aef18a1c48a00a82cccf9e500, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 76506b0aef18a1c48a00a82cccf9e500, type: 3}
 --- !u!1 &3866084930092706873 stripped
 GameObject:

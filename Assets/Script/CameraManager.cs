@@ -4,19 +4,26 @@ using UnityEngine;
 
 public class CameraManager : MonoBehaviour
 {
-    private Rigidbody Player;
+    public Rigidbody Player;
     public float Sensitivity = 1500f;
     float rotateX = 0f;
     float rotateY = 0f;
 
+    public bool isShow, isSelect;
+
     void Start()
     {
-        Player = GameObject.FindWithTag("Player").GetComponent<Rigidbody>();
+        isShow = isSelect = false;
     }
 
     void Update()
     {
-        if (Player != null)
+        if (isSelect && Player == null)
+        {
+            Player = GameObject.FindWithTag("Player").GetComponent<Rigidbody>();
+        }
+
+        if (isSelect && !isShow)
         {
             TracePlayer();
             CameraControl();
@@ -36,10 +43,24 @@ public class CameraManager : MonoBehaviour
         rotateX += Sensitivity * mouseX * Time.deltaTime;
         rotateY += Sensitivity * mouseY * Time.deltaTime;
 
-        rotateX = Mathf.Clamp(rotateX, -120, 120);
+        //rotateX = Mathf.Clamp(rotateX, -180, 180);
         rotateY = Mathf.Clamp(rotateY, -30, 30);
 
         // X, Y 는 회전축을 나타내기에 위치가 바뀌었다.
         transform.eulerAngles = new Vector3(-rotateY, rotateX, 0f);
+    }
+    public void inUI()
+    {
+        isShow = true;
+    }
+
+    public void outUI()
+    {
+        isShow = false;
+    }
+
+    public void inSelect()
+    {
+        isSelect = true;
     }
 }
