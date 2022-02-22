@@ -4,9 +4,16 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using TMPro;
+using Photon.Pun;
+using Photon.Realtime;
+using Photon.Pun.UtilityScripts;
 
 public class AvatarController : MonoBehaviour
 {
+    public PhotonView PV;
+
+    public Animator anim;
+
     public Canvas UI;
     GraphicRaycaster rayUI;
     EventSystem eventUI;
@@ -66,6 +73,17 @@ public class AvatarController : MonoBehaviour
                     controlPPT.PPTLoader(mouseTarget.GetComponentInChildren<TMP_Text>().text);
                     UI.GetComponent<UI_Manager_Class>().exit();
                 }
+
+                else if(mouseTarget.tag == "ConnectClass")
+                {
+                    Debug.Log("Connect to Class");
+                    UI.GetComponent<UI_Manager_Class>().enableConnectUI();
+                }
+
+                else if(mouseTarget.tag == "Seat")
+                {
+                    transform.position = mouseTarget.transform.position;
+                }
             }
         }
 
@@ -99,13 +117,15 @@ public class AvatarController : MonoBehaviour
 
     void MouseTrace()
     {
-        transform.rotation = Camera.main.transform.rotation;
+        transform.rotation = new Quaternion(transform.rotation.x, Camera.main.transform.rotation.y, transform.rotation.z, transform.rotation.w);
     }
 
     void Move()
     {
         float inputX = Input.GetAxis("Horizontal");
         float inputZ = Input.GetAxis("Vertical");
+
+        anim.SetFloat("Walk", Mathf.Abs(inputX) + Mathf.Abs(inputZ));
 
         transform.Translate((new Vector3(inputX, 0, inputZ) * speed) * Time.deltaTime);
     }
@@ -117,6 +137,7 @@ public class AvatarController : MonoBehaviour
             if(!isJump)
             {
                 isJump = true;
+                anim.SetTrigger("Jump");
                 avatarRigidbody.AddForce(Vector3.up * jumpPower, ForceMode.VelocityChange);
             }
         }

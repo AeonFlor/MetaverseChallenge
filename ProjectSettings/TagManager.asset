@@ -7,6 +7,8 @@ TagManager:
   - Ground
   - ProfessorDesk
   - PPT_Button
+  - ConnectClass
+  - Seat
   layers:
   - Default
   - TransparentFX

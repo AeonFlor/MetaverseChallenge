@@ -7,11 +7,14 @@ using UnityEngine.UI;
 
 public class ServerManager : MonoBehaviourPunCallbacks
 {
-    private bool connect = false;
-    public string nickname;
+    private string nickname;
 
     private void Awake()
     {
+        nickname = GameObject.FindWithTag("Player").GetComponent<AvatarController>().nickname;
+        PhotonNetwork.AutomaticallySyncScene = true;
+        PhotonNetwork.NickName = nickname;
+
         Connect();
     }
 
@@ -22,9 +25,28 @@ public class ServerManager : MonoBehaviourPunCallbacks
 
     public override void OnConnectedToMaster()
     {
-        Debug.Log("서버 접속 완료");
-        PhotonNetwork.JoinOrCreateRoom("Lobby", new RoomOptions { MaxPlayers = 10 }, null);
-        connect = true;
+        PhotonNetwork.JoinLobby();
+    }
+
+    public override void OnJoinedLobby()
+    {
+        Debug.Log($"PhotonNetwork.InLobby = {PhotonNetwork.InLobby}");
+        Debug.Log(PhotonNetwork.NickName + "님이 로비에 연결되었습니다.");
+    }
+
+    public void JoinClass()
+    {
+        PhotonNetwork.JoinOrCreateRoom("강의실", new RoomOptions { MaxPlayers = 5 }, null);
+    }
+
+    public override void OnCreatedRoom()
+    {
+        Debug.Log("강의실이 생성되었습니다.");
+    }
+
+    public override void OnJoinedRoom()
+    {
+        Debug.Log(PhotonNetwork.NickName + "님이 강의실에 참가했습니다.");
     }
 
     public void Disconnect()

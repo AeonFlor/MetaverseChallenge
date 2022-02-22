@@ -10,14 +10,18 @@ public class UI_Manager_Class : MonoBehaviour
     public Canvas UI;
     public GameObject[] avatar = new GameObject[3];
 
-    public Button BtnCheckPPT, BtnManageStudent, BtnExit01, BtnExit02, BtnBack, BtnPrevious, BtnNext, BtnSelect;
+    public Button BtnCheckPPT, BtnManageStudent, BtnExit01, BtnExit02, BtnBack, BtnPrevious, BtnNext, BtnSelect, BtnExit03, BtnConnect;
     public TMP_InputField InputNickname;
 
-    private GameObject DeskUI, PPTUI, SelectUI;
+    private GameObject DeskUI, PPTUI, SelectUI, ConnectUI;
 
     CameraManager player;
 
     public Camera MainCamera;
+
+    GameObject userAvatar;
+
+    GameObject ServerManager;
 
     // Start is called before the first frame update
     void Start()
@@ -31,14 +35,18 @@ public class UI_Manager_Class : MonoBehaviour
         BtnManageStudent.onClick.AddListener(manageStudent);
         BtnExit01.onClick.AddListener(exit);
         BtnExit02.onClick.AddListener(exit);
+        BtnExit03.onClick.AddListener(exit);
         BtnBack.onClick.AddListener(back);
+        BtnConnect.onClick.AddListener(connect);
 
         DeskUI = GameObject.Find("Desk_UI");
         PPTUI = GameObject.Find("PPT_UI");
         SelectUI = GameObject.Find("Select_UI");
+        ConnectUI = GameObject.Find("Connect_UI");
 
         DeskUI.SetActive(false);
         PPTUI.SetActive(false);
+        ConnectUI.SetActive(false);
         SelectUI.SetActive(true);
     }
 
@@ -65,6 +73,7 @@ public class UI_Manager_Class : MonoBehaviour
     {
         DeskUI.SetActive(false);
         PPTUI.SetActive(false);
+        ConnectUI.SetActive(false);
         player.outUI();
     }
 
@@ -72,6 +81,12 @@ public class UI_Manager_Class : MonoBehaviour
     {
         player.inUI();
         DeskUI.SetActive(true);
+    }
+
+    public void enableConnectUI()
+    {
+        player.inUI();
+        ConnectUI.SetActive(true);
     }
 
     public bool isActiveUI()
@@ -99,8 +114,8 @@ public class UI_Manager_Class : MonoBehaviour
 
     void select()
     {
-        GameObject userAvatar = Instantiate(avatar[(int)MainCamera.transform.position.x / 10]);
-        userAvatar.transform.position = userAvatar.transform.position + new Vector3(0, 10, 0);
+        userAvatar = Instantiate(avatar[(int)MainCamera.transform.position.x / 10]);
+        userAvatar.transform.position = new Vector3(0, 10, 0);
 
         userAvatar.GetComponent<AvatarController>().nickname = InputNickname.text;
         userAvatar.GetComponent<AvatarController>().ActiveName();
@@ -113,5 +128,23 @@ public class UI_Manager_Class : MonoBehaviour
         SceneManager.LoadScene("Lobby");
 
         MainCamera.GetComponent<CameraManager>().inSelect();
+    }
+
+    void connect()
+    {
+        ServerManager = GameObject.Find("ServerManager");
+        ServerManager.GetComponent<ServerManager>().JoinClass();
+
+        exit();
+        ConnectUI.SetActive(false);
+
+        userAvatar.transform.position = new Vector3(0, 10, 0);
+
+        DontDestroyOnLoad(userAvatar);
+        DontDestroyOnLoad(UI);
+        DontDestroyOnLoad(MainCamera);
+        DontDestroyOnLoad(ServerManager);
+
+        SceneManager.LoadScene("Class");
     }
 }
