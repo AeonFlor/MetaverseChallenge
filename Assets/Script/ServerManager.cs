@@ -7,15 +7,15 @@ using UnityEngine.UI;
 
 public class ServerManager : MonoBehaviourPunCallbacks
 {
-    private string nickname;
+    public string nickname, player;
 
-    private void Awake()
+
+    public void openLobby(string player, string nickname)
     {
-        nickname = GameObject.FindWithTag("Player").GetComponent<AvatarController>().nickname;
-        PhotonNetwork.AutomaticallySyncScene = true;
-        PhotonNetwork.NickName = nickname;
-
         Connect();
+
+        this.player = player;
+        this.nickname = nickname;
     }
 
     public void Connect()
@@ -25,18 +25,33 @@ public class ServerManager : MonoBehaviourPunCallbacks
 
     public override void OnConnectedToMaster()
     {
+        Debug.Log(nickname + "님이 " + player + " 아바타로 로비에 서버에 연결되었습니다.");
+
+        PhotonNetwork.AutomaticallySyncScene = true;
+
+        var Player = PhotonNetwork.Instantiate(player, new Vector3(0, 10, 0), Quaternion.identity);
+        Debug.Log(Player);
+        PhotonNetwork.LocalPlayer.NickName = nickname;
+
         PhotonNetwork.JoinLobby();
     }
 
     public override void OnJoinedLobby()
     {
-        Debug.Log($"PhotonNetwork.InLobby = {PhotonNetwork.InLobby}");
         Debug.Log(PhotonNetwork.NickName + "님이 로비에 연결되었습니다.");
     }
 
     public void JoinClass()
     {
-        PhotonNetwork.JoinOrCreateRoom("강의실", new RoomOptions { MaxPlayers = 5 }, null);
+        if (PhotonNetwork.IsConnected)
+        {
+            PhotonNetwork.JoinOrCreateRoom("강의실", new RoomOptions { MaxPlayers = 5 }, null);
+        }
+
+        else
+        {
+            Connect();
+        }
     }
 
     public override void OnCreatedRoom()
@@ -56,6 +71,7 @@ public class ServerManager : MonoBehaviourPunCallbacks
 
     public override void OnDisconnected(DisconnectCause cause)
     {
-        Debug.Log("서버 연결 끊김");
+        Debug.Log("서버 연결 끊김 - 재접속 시도 중 ...");
+        Connect();
     }
 }

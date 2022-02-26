@@ -39,10 +39,10 @@ Animator:
   m_GameObject: {fileID: 4935232033193110385}
   m_Enabled: 1
   m_Avatar: {fileID: 9000000, guid: f0e2cf1c27f3aab4d9084cac5d495657, type: 3}
-  m_Controller: {fileID: 9100000, guid: a8555c0cff30527479e32562cef9141f, type: 2}
+  m_Controller: {fileID: 9100000, guid: fb36cbc179c8515499faba6a203d5008, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
-  m_ApplyRootMotion: 1
+  m_ApplyRootMotion: 0
   m_LinearVelocityBlending: 0
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
@@ -60,14 +60,80 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f473f226fdd6cb74792be79bdfb4aa41, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  PV: {fileID: 0}
-  anim: {fileID: 0}
+  anim: {fileID: 2143270403}
   UI: {fileID: 0}
   avatarRigidbody: {fileID: 2143270402}
   nickname: 
   speed: 10
   jumpPower: 3
   PowerpointLoader: {fileID: 0}
+--- !u!114 &1197927732301265731
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4935232033193110385}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 627855c7f81362d41938ffe0b1475957, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SynchronizePosition: 1
+  m_SynchronizeRotation: 1
+  m_SynchronizeScale: 0
+  m_UseLocal: 1
+--- !u!114 &4836103272168386883
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4935232033193110385}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ObservedComponentsFoldoutOpen: 1
+  Group: 0
+  prefixField: -1
+  Synchronization: 3
+  OwnershipTransfer: 0
+  observableSearch: 2
+  ObservedComponents:
+  - {fileID: 1197927732301265731}
+  - {fileID: 6845903408092791594}
+  sceneViewId: 0
+  InstantiationId: 0
+  isRuntimeInstantiated: 0
+--- !u!114 &6845903408092791594
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4935232033193110385}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b8c4a61274f60b4ea5fb4299cfdbf14, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShowLayerWeightsInspector: 1
+  ShowParameterInspector: 1
+  m_SynchronizeParameters:
+  - Type: 9
+    SynchronizeType: 0
+    Name: Jump
+  - Type: 1
+    SynchronizeType: 2
+    Name: Walk
+  - Type: 4
+    SynchronizeType: 2
+    Name: sit
+  m_SynchronizeLayers:
+  - SynchronizeType: 2
+    LayerIndex: 0
 --- !u!1001 &5241097821483406880
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -122,6 +188,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: f0e2cf1c27f3aab4d9084cac5d495657, type: 3}
       propertyPath: m_Name
       value: girl
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: f0e2cf1c27f3aab4d9084cac5d495657, type: 3}
+      propertyPath: m_TagString
+      value: Player
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f0e2cf1c27f3aab4d9084cac5d495657, type: 3}

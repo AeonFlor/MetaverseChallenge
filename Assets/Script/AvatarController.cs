@@ -8,13 +8,12 @@ using Photon.Pun;
 using Photon.Realtime;
 using Photon.Pun.UtilityScripts;
 
-public class AvatarController : MonoBehaviour
+public class AvatarController : MonoBehaviourPun
 {
-    public PhotonView PV;
-
+    PhotonView pv;
     public Animator anim;
 
-    public Canvas UI;
+    GameObject UI;
     GraphicRaycaster rayUI;
     EventSystem eventUI;
     PointerEventData pointer;
@@ -26,22 +25,27 @@ public class AvatarController : MonoBehaviour
     public float speed = 10f;
     public float jumpPower = 5f;
 
-    bool isJump, authPPT, onName;
+    bool isJump, isSit, authPPT, onName, isLocal;
 
-    public GameObject PowerpointLoader;
+    GameObject PowerpointLoader;
     PowerpointLoader controlPPT;
 
     GameObject UserCanvas;
     Transform nicknameUI;
 
-    // Start is called before the first frame update
-    void Start()
+    private void Awake()
     {
+        pv = GetComponent<PhotonView>();
+
+        UI = GameObject.Find("Canvas");
+
         avatarRigidbody = GetComponent<Rigidbody>();
         rayUI = UI.GetComponent<GraphicRaycaster>();
         eventUI = GetComponent<EventSystem>();
 
-        authPPT = onName = false;
+        PowerpointLoader = UI.transform.Find("PPT_UI").gameObject;
+
+        authPPT = isSit = onName = false;
 
         controlPPT = PowerpointLoader.GetComponent<PowerpointLoader>();
     }
@@ -49,6 +53,12 @@ public class AvatarController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if(!pv.IsMine)
+        {
+            Debug.Log("-");
+            return;
+        }
+
         if (Input.GetMouseButtonDown(0))
         {
             if (Camera.main.GetComponent<CameraManager>().isShow)
@@ -82,8 +92,21 @@ public class AvatarController : MonoBehaviour
 
                 else if(mouseTarget.tag == "Seat")
                 {
-                    transform.position = mouseTarget.transform.position;
+                    if(!isSit)
+                    {
+                        transform.position = mouseTarget.transform.position;
+                        anim.SetBool("sit", true);
+                        isSit = true;
+                    }
                 }
+            }
+        }
+
+        if(isSit)
+        {
+            if(Input.GetKeyDown(KeyCode.Escape))
+            {
+
             }
         }
 
@@ -200,5 +223,10 @@ public class AvatarController : MonoBehaviour
         Debug.Log(nicknameUI);
 
         nicknameUI.GetComponent<TMP_Text>().text = nickname;
+    }
+
+    public bool checkLocal()
+    {
+        return isLocal;
     }
 }

@@ -4,11 +4,13 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using TMPro;
+using Photon.Pun;
+using Photon.Realtime;
 
-public class UI_Manager_Class : MonoBehaviour
+public class UI_Manager_Class : MonoBehaviourPunCallbacks
 {
     public Canvas UI;
-    public GameObject[] avatar = new GameObject[3];
+    public string[] avatar;
 
     public Button BtnCheckPPT, BtnManageStudent, BtnExit01, BtnExit02, BtnBack, BtnPrevious, BtnNext, BtnSelect, BtnExit03, BtnConnect;
     public TMP_InputField InputNickname;
@@ -26,6 +28,8 @@ public class UI_Manager_Class : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        avatar = new string[] { "professor", "boy", "girl" };
+
         player = MainCamera.GetComponent<CameraManager>();
 
         BtnPrevious.onClick.AddListener(previous);
@@ -43,6 +47,8 @@ public class UI_Manager_Class : MonoBehaviour
         PPTUI = GameObject.Find("PPT_UI");
         SelectUI = GameObject.Find("Select_UI");
         ConnectUI = GameObject.Find("Connect_UI");
+
+        ServerManager = GameObject.Find("ServerManager");
 
         DeskUI.SetActive(false);
         PPTUI.SetActive(false);
@@ -87,6 +93,15 @@ public class UI_Manager_Class : MonoBehaviour
     {
         player.inUI();
         ConnectUI.SetActive(true);
+
+        if (!PhotonNetwork.IsConnected)
+        {
+            BtnConnect.interactable = false;
+            BtnConnect.GetComponentInChildren<TMP_Text>().text = "네트워크가 연결된 후 다시 시도해주세요";
+        }
+
+        else
+            BtnConnect.GetComponentInChildren<TMP_Text>().text = "네";
     }
 
     public bool isActiveUI()
@@ -114,37 +129,35 @@ public class UI_Manager_Class : MonoBehaviour
 
     void select()
     {
-        userAvatar = Instantiate(avatar[(int)MainCamera.transform.position.x / 10]);
-        userAvatar.transform.position = new Vector3(0, 10, 0);
-
-        userAvatar.GetComponent<AvatarController>().nickname = InputNickname.text;
-        userAvatar.GetComponent<AvatarController>().ActiveName();
-
-        DontDestroyOnLoad(userAvatar);
         DontDestroyOnLoad(UI);
         DontDestroyOnLoad(MainCamera);
+        DontDestroyOnLoad(ServerManager);
 
         SelectUI.SetActive(false);
-        SceneManager.LoadScene("Lobby");
+        PhotonNetwork.LoadLevel("Lobby");
+
+        ServerManager.GetComponent<ServerManager>().openLobby(avatar[(int)MainCamera.transform.position.x / 10], InputNickname.text);
 
         MainCamera.GetComponent<CameraManager>().inSelect();
     }
 
     void connect()
     {
-        ServerManager = GameObject.Find("ServerManager");
-        ServerManager.GetComponent<ServerManager>().JoinClass();
+        if (PhotonNetwork.IsConnected)
+        {
+            ServerManager.GetComponent<ServerManager>().JoinClass();
 
-        exit();
-        ConnectUI.SetActive(false);
+            exit();
+            ConnectUI.SetActive(false);
 
-        userAvatar.transform.position = new Vector3(0, 10, 0);
+            userAvatar.transform.position = new Vector3(0, 10, 0);
 
-        DontDestroyOnLoad(userAvatar);
-        DontDestroyOnLoad(UI);
-        DontDestroyOnLoad(MainCamera);
-        DontDestroyOnLoad(ServerManager);
+            DontDestroyOnLoad(userAvatar);
+            DontDestroyOnLoad(UI);
+            DontDestroyOnLoad(MainCamera);
+            DontDestroyOnLoad(ServerManager);
 
-        SceneManager.LoadScene("Class");
+            PhotonNetwork.LoadLevel("Class");
+        }
     }
 }

@@ -11,6 +11,8 @@ public class CameraManager : MonoBehaviour
 
     public bool isShow, isSelect;
 
+    GameObject[] players;
+
     void Start()
     {
         isShow = isSelect = false;
@@ -20,7 +22,15 @@ public class CameraManager : MonoBehaviour
     {
         if (isSelect && Player == null)
         {
-            Player = GameObject.FindWithTag("Player").GetComponent<Rigidbody>();
+            players = GameObject.FindGameObjectsWithTag("Player");
+
+            foreach(var player in players)
+            {
+                if (player.GetComponent<AvatarController>().checkLocal())
+                {
+                    Player = player.GetComponent<Rigidbody>();
+                }
+            }
         }
 
         if (isSelect && !isShow)
